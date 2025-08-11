@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { Component } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      index: 0,
+      slideCount: 3
+    };
+    this.autoSlide = this.autoSlide.bind(this);
+  }
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  componentDidMount() {
+    this.interval = setInterval(this.autoSlide, 3000); // change slide every 3s
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  autoSlide() {
+    let nextIndex = (this.state.index + 1) % this.state.slideCount;
+    this.setState({ index: nextIndex });
+    document.getElementById("slideRef").style.transform = `translateX(-${nextIndex * 100}%)`;
+  }
+
+  render() {
+    const { index } = this.state;
+    return (
+      <>
+        <header>
+          <div className='logo'>Sliding Page - Slide {index + 1}</div>
+        </header>
+
+        <section>
+          <div className='slider'>
+            <div className='slides' id="slideRef">
+              <div className='slide s1'></div>
+              <div className='slide s2'></div>
+              <div className='slide s3'></div>
+            </div>
+          </div>
+        </section>
+
+        <footer>
+          Copyright © 2025. All rights reserved.
+        </footer>
+      </>
+    );
+  }
 }
 
-export default App
+export default App;
